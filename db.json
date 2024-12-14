@@ -1,0 +1,30 @@
+{
+  "businesses": [
+    {
+      "id": 1,
+      "name": "Meze Turkish Grill Restaurent",
+      "date": "2024-12-11",
+      "status": "Processing"
+    },
+    {
+      "id": 2,
+      "name": "Samrat",
+      "date": "2024-12-11",
+      "status": "Processing"
+    }
+  ],
+  "restaurentlist": [
+    [
+      "Bengal Village Lingfield",
+      "Bibiyana Indian Cuisine",
+      "Cinnamon Tree",
+      "Dalchini Spice",
+      "Haweli Of Ealing",
+      "Meze Turkish Grill Restaurant",
+      "Muhib Indian Cuisine",
+      "Ortabda",
+      "Pink Garlic Malta",
+      "Pink Paprika"
+    ]
+  ]
+}
