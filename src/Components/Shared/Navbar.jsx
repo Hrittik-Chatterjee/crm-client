@@ -26,32 +26,19 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             <li>
-              <Link> All Content</Link>
-              <ul className="p-2">
-                <li>
-                  <Link> Regular Content </Link>
-                </li>
-                <li>
-                  <Link> Special Content</Link>
-                </li>
-              </ul>
+              <Link to="/"> All Content</Link>
             </li>
             <li>
-              <Link> Write Content</Link>
-              <ul className="p-2">
-                <li>
-                  <Link> Regular Content </Link>
-                </li>
-                <li>
-                  <Link> Special Content</Link>
-                </li>
-              </ul>
+              <Link to="/addregularcontent"> Write Content</Link>
             </li>
             <li>
-              <Link> Item 1</Link>
+              <Link to="/links"> Links</Link>
             </li>
             <li>
-              <Link> Item 3</Link>
+              <Link to="/businesses"> Business</Link>
+            </li>
+            <li>
+              <Link to="/tasks"> Tasks</Link>
             </li>
           </ul>
         </div>
@@ -60,36 +47,19 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <details>
-              <summary>All Content</summary>
-              <ul className="p-2">
-                <li>
-                  <Link> Regular Content</Link>
-                </li>
-                <li>
-                  <Link> Special Content</Link>
-                </li>
-              </ul>
-            </details>
+            <Link to="/">All Content</Link>
           </li>
           <li>
-            <details>
-              <summary>Write Content</summary>
-              <ul className="p-2">
-                <li>
-                  <Link to="/addregularcontent"> Regular Content </Link>
-                </li>
-                <li>
-                  <Link to="/addspecialcontent"> Special Content</Link>
-                </li>
-              </ul>
-            </details>
+            <Link to="/addregularcontent"> Write Content</Link>
           </li>
           <li>
             <Link to="/links">Links</Link>
           </li>
           <li>
             <Link to="/businesses"> Business</Link>
+          </li>
+          <li>
+            <Link to="/tasks"> Tasks</Link>
           </li>
         </ul>
       </div>

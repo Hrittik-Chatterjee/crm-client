@@ -39,6 +39,11 @@ const AddRegularContent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
 
+    // Combine Poster Material and Tags
+    const posterMaterial = e.target.posterMaterial.value;
+    const tags = e.target.tags.value;
+    const posterAndTags = `${posterMaterial} ${tags}`.trim();
+
     // Construct the payload
     const formData = {
       name: selectedBusiness?.businessName || "", // Use the selected business name
@@ -49,12 +54,10 @@ const AddRegularContent = () => {
             year: "numeric",
           })
         : "", // Format date as YYYY-MM-DD
-      postMaterial: e.target.postMaterial.value, // Capture post material input
-      posterMaterial: e.target.posterMaterial.value, // Capture poster material input
+      posterAndTags, // Combined Poster Material and Tags
       vision: e.target.vision.value, // Capture vision input
-      tags: e.target.tags.value, // Capture tags input
       comments: e.target.comments.value,
-      status: false, // Capture comments input
+      status: false, // Initial status set to false
     };
 
     try {
@@ -164,17 +167,6 @@ const AddRegularContent = () => {
 
             <div className="mt-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Post Material
-              </label>
-              <textarea
-                name="postMaterial"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                rows="3"
-              ></textarea>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
                 Poster Material
               </label>
               <textarea
@@ -184,28 +176,27 @@ const AddRegularContent = () => {
               ></textarea>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Vision
-                </label>
-                <textarea
-                  name="vision"
-                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  rows="3"
-                ></textarea>
-              </div>
+            <div className="mt-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Tags
+              </label>
+              <textarea
+                name="tags"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                rows="3"
+                value={selectedBusiness?.tags || ""}
+              ></textarea>
+            </div>
 
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Tags
-                </label>
-                <textarea
-                  name="tags"
-                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  rows="3"
-                ></textarea>
-              </div>
+            <div className="mt-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Vision
+              </label>
+              <textarea
+                name="vision"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                rows="3"
+              ></textarea>
             </div>
 
             <div className="mt-4">

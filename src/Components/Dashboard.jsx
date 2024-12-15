@@ -64,22 +64,48 @@ const Dashboard = () => {
 
   const toggleDatePicker = () => setShowDatePicker(!showDatePicker);
 
-  const handleStatusChange = async (id, newStatus) => {
-    try {
-      await axios.patch(
-        `https://crm-backend-cjyf.onrender.com/regularcontents/${id}`,
-        {
-          status: newStatus,
-        }
-      );
-      setRegularContents((prev) =>
-        prev.map((content) =>
-          content._id === id ? { ...content, status: newStatus } : content
-        )
-      );
-    } catch (error) {
-      console.error("Error updating status in backend:", error);
-      alert("Failed to update status. Please try again.");
+  // Add the updated status change functionality
+  const handleTickClick = async (id, currentStatus) => {
+    if (!currentStatus) {
+      // Change status from 'Processing' to 'Done'
+      try {
+        await axios.patch(
+          `https://crm-backend-cjyf.onrender.com/regularcontents/${id}`,
+          {
+            status: true,
+          }
+        );
+        setRegularContents((prev) =>
+          prev.map((content) =>
+            content._id === id ? { ...content, status: true } : content
+          )
+        );
+      } catch (error) {
+        console.error("Error updating status to 'Done':", error);
+        alert("Failed to update status. Please try again.");
+      }
+    }
+  };
+
+  const handleCrossClick = async (id, currentStatus) => {
+    if (currentStatus) {
+      // Change status from 'Done' to 'Processing'
+      try {
+        await axios.patch(
+          `https://crm-backend-cjyf.onrender.com/regularcontents/${id}`,
+          {
+            status: false,
+          }
+        );
+        setRegularContents((prev) =>
+          prev.map((content) =>
+            content._id === id ? { ...content, status: false } : content
+          )
+        );
+      } catch (error) {
+        console.error("Error updating status to 'Processing':", error);
+        alert("Failed to update status. Please try again.");
+      }
     }
   };
 
@@ -226,18 +252,25 @@ const Dashboard = () => {
                 >
                   {content.status ? "Done" : "Processing"}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-2 flex items-center space-x-2">
+                  {/* Tick Button */}
                   <button
-                    className={`px-3 py-1 rounded-md ${
-                      content.status
-                        ? "bg-gray-500 text-white"
-                        : "bg-green-500 text-white"
-                    }`}
-                    onClick={() =>
-                      handleStatusChange(content._id, !content.status)
-                    }
+                    className="px-3 py-1 bg-green-500 text-white rounded-md"
+                    onClick={() => handleTickClick(content._id, content.status)}
+                    disabled={content.status} // Disable if already 'Done'
                   >
-                    {content.status ? "Mark as Processing" : "Mark as Done"}
+                    ✓
+                  </button>
+
+                  {/* Cross Button */}
+                  <button
+                    className="px-3 py-1 bg-red-600 text-white rounded-md"
+                    onClick={() =>
+                      handleCrossClick(content._id, content.status)
+                    }
+                    disabled={!content.status} // Disable if already 'Processing'
+                  >
+                    ✕
                   </button>
                 </td>
                 <td className="px-4 py-2">
@@ -290,7 +323,8 @@ const Dashboard = () => {
               {new Date(modalContent.date).toLocaleDateString()}
             </p>
             <p>
-              <strong>Post Material:</strong> {modalContent.postMaterial}
+              <strong>Post Material and Tags:</strong>{" "}
+              {modalContent.posterAndTags}
             </p>
             <p>
               <strong>Poster Material:</strong> {modalContent.posterMaterial}
@@ -298,9 +332,7 @@ const Dashboard = () => {
             <p>
               <strong>Vision:</strong> {modalContent.vision}
             </p>
-            <p>
-              <strong>Tags:</strong> {modalContent.tags}
-            </p>
+
             <p>
               <strong>Comments:</strong> {modalContent.comments}
             </p>
