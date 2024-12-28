@@ -3,6 +3,7 @@ import { DayPicker } from "react-day-picker";
 import axios from "axios";
 import "react-day-picker/dist/style.css";
 import { useAuth } from "../hooks/useAuth";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -61,18 +62,19 @@ const Dashboard = () => {
 
   // Filter contents based on selected business and date
   const filteredContents = regularContents.filter((content) => {
-    if (user.role === 'admin') {
-      return true; // Show all contents for admin
-    }
+    const contentDate = new Date(content.date); // Parse content.date into a Date object
     const isDateMatch =
-      new Date(content.date).toLocaleDateString() ===
-      selectedDate.toLocaleDateString();
+      contentDate.toISOString().split("T")[0] ===
+      selectedDate.toISOString().split("T")[0]; // Compare YYYY-MM-DD
+
     const isBusinessMatch =
       !selectedBusiness || content.name === selectedBusiness;
-    const isUserMatch = user.username === content.addedBy;
+    const isUserMatch =
+      user.role === "admin" || user.username === content.addedBy;
+
     return isDateMatch && isBusinessMatch && isUserMatch;
   });
-  
+
   const toggleDatePicker = () => setShowDatePicker(!showDatePicker);
 
   // Add the updated status change functionality
@@ -173,15 +175,20 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex  bg-gray-100 font-title" style={{ height: "90vh" }}>
       {/* Sidebar */}
-      <div className="w-1/4 bg-white shadow-md">
+      <div className="w-1/4 bg-white shadow-md   h-full  ">
         <div className="p-4">
+          {/* Date Picker */}
           <button
-            className="select select-primary w-full max-w-xs bg-slate-300"
+            className="select select-primary w-full max-w-xs bg-slate-100 flex items-center justify-center"
             onClick={toggleDatePicker}
           >
-            {selectedDate ? selectedDate.toLocaleDateString() : "Select a Date"}
+            <p className="text-center">
+              {selectedDate
+                ? selectedDate.toLocaleDateString()
+                : "Select a Date"}
+            </p>
           </button>
 
           {showDatePicker && (
@@ -197,6 +204,7 @@ const Dashboard = () => {
             </div>
           )}
 
+          {/* Search Input */}
           <input
             type="text"
             placeholder="Search"
@@ -205,15 +213,11 @@ const Dashboard = () => {
             className="mt-2 w-full px-3 py-2 border rounded-md"
           />
 
-          <ul className="mt-4 space-y-2">
-            <li
-              className={`cursor-pointer px-3 py-2 rounded-md ${
-                !selectedBusiness ? "bg-purple-200" : "hover:bg-purple-100"
-              }`}
-              onClick={() => setSelectedBusiness(null)}
-            >
-              Show All Restaurants
-            </li>
+          {/* Business List */}
+          <ul
+            className="mt-4 space-y-2 overflow-y-auto sidebar"
+            style={{ maxHeight: "calc(100vh - 230px)" }} // Adjust max height dynamically
+          >
             {filteredBusinesses.map((business) => (
               <li
                 key={business.businessName}
@@ -236,22 +240,35 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-6">
-        <h2 className="text-xl font-bold mb-4">
-          Content → {selectedDate.toLocaleDateString() || "No Date Selected"}
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Content {selectedDate.toLocaleDateString() || "No Date Selected"}
         </h2>
         <table className="w-full bg-white shadow-md rounded-md overflow-hidden">
           <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="px-4 py-2">Business Name</th>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Change Status</th>
-              <th className="px-4 py-2">Action</th>
+            <tr className="bg-blue-100 text-center ">
+              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
+                Business Name
+              </th>
+              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
+                Date
+              </th>
+              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
+                Status
+              </th>
+              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
+                Change Status
+              </th>
+              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredContents.map((content) => (
-              <tr key={content._id} className="border-b hover:bg-gray-50">
+              <tr
+                key={content._id}
+                className="border-b hover:bg-gray-50 text-center"
+              >
                 <td className="px-4 py-2">{content.name}</td>
                 <td className="px-4 py-2">
                   {new Date(content.date).toLocaleDateString()}
@@ -263,10 +280,10 @@ const Dashboard = () => {
                 >
                   {content.status ? "Done" : "Processing"}
                 </td>
-                <td className="px-4 py-2 flex items-center space-x-2">
+                <td className="ml-14  py-2 flex items-center space-x-2">
                   {/* Tick Button */}
                   <button
-                    className="px-3 py-1 bg-green-500 text-white rounded-md"
+                    className="px-3 bg-blue-500 text-white rounded-md"
                     onClick={() => handleTickClick(content._id, content.status)}
                     disabled={content.status} // Disable if already 'Done'
                   >
@@ -275,7 +292,7 @@ const Dashboard = () => {
 
                   {/* Cross Button */}
                   <button
-                    className="px-3 py-1 bg-red-600 text-white rounded-md"
+                    className="px-3 bg-red-600 text-white rounded-md"
                     onClick={() =>
                       handleCrossClick(content._id, content.status)
                     }
@@ -287,19 +304,19 @@ const Dashboard = () => {
                 <td className="px-4 py-2">
                   <button
                     onClick={() => openEditModal(content)}
-                    className="px-3 py-1 mr-2 bg-blue-500 text-white rounded-md"
+                    className="px-3 mr-2 bg-blue-500 text-white rounded-md"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => openViewModal(content)}
-                    className="                    px-3 py-1 mr-2 bg-yellow-500 text-white rounded-md"
+                    className=" px-3  mr-2 bg-blue-500 text-white rounded-md"
                   >
                     View
                   </button>
                   <button
                     onClick={() => handleDelete(content._id)}
-                    className="px-3 py-1 bg-red-600 text-white rounded-md"
+                    className="px-3  bg-blue-500 text-white rounded-md"
                   >
                     Delete
                   </button>

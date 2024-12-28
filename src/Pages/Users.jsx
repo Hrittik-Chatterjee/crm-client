@@ -46,7 +46,7 @@ const Users = () => {
         return;
       }
 
-      await axios.delete(`https://crm-backend-cjyf.onrender.com/${userId}`, {
+      await axios.delete(`https://crm-backend-cjyf.onrender.com/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

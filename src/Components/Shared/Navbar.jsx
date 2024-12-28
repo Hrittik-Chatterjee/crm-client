@@ -7,10 +7,9 @@ const Navbar = () => {
   if (loading) {
     return <div>Loading...</div>; // Display a placeholder while loading
   }
-  console.log(user?.username);
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-base-10 font-title">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -32,7 +31,7 @@ const Navbar = () => {
           {user && (
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow font-semibold"
             >
               <li>
                 <Link to="/">All Content</Link>
@@ -52,12 +51,12 @@ const Navbar = () => {
             </ul>
           )}
         </div>
-        <Link className="btn btn-ghost text-xl">daisyUI</Link>
+        <Link className="btn btn-ghost text-xl">Logo</Link>
       </div>
 
       <div className="navbar-center hidden lg:flex">
         {user && (
-          <ul className="menu menu-horizontal px-1">
+          <ul className="menu menu-horizontal px-1 font-semibold">
             <li>
               <Link to="/">All Content</Link>
             </li>

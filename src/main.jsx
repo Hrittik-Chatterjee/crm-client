@@ -6,7 +6,7 @@ import { router } from "./Routes/Routes";
 import AuthProvider from "./Providers/AuthProvider";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <StrictMode className="bg-white">
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>

@@ -1,0 +1,30 @@
+/* Sidebar.css */
+
+/* Scrollbar for Webkit Browsers (e.g., Chrome, Edge, Safari) */
+.sidebar::-webkit-scrollbar {
+  width: 6px; /* Reduce width for a smaller scrollbar */
+  height: 4px; /* Optional for horizontal scrollbars */
+}
+
+/* Scrollbar Thumb */
+.sidebar::-webkit-scrollbar-thumb {
+  background: #d30000; /* Subtle gray for the thumb */
+  border-radius: 8px; /* Rounded scrollbar thumb */
+}
+
+/* Scrollbar Thumb on Hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #fcf7f7; /* Slightly darker gray on hover */
+}
+
+/* Scrollbar Track */
+.sidebar::-webkit-scrollbar-track {
+  background: #f4f4f5; /* Light gray for the track */
+  border-radius: 8px; /* Match roundness of the thumb */
+}
+
+/* Firefox-specific styles */
+.sidebar {
+  scrollbar-width: thin; /* Makes scrollbar smaller */
+  scrollbar-color: #3719bb #f4f4f5; /* Thumb color (first), track color (second) */
+}
