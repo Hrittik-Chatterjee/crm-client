@@ -84,7 +84,7 @@ const Users = () => {
 
       const { _id, ...dataToSend } = updatedUser; // Exclude `_id` from the payload
       const response = await axios.patch(
-        `https://crm-backend-cjyf.onrender.com/${_id}`,
+        `https://crm-backend-cjyf.onrender.com/users/${_id}`,
         dataToSend,
         {
           headers: {

@@ -88,7 +88,7 @@ const EditBusinessForm = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `https://crm-backend-cjyf.onrender.com/${businessId}`,
+          `https://crm-backend-cjyf.onrender.com/businesses/${businessId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Include the Bearer token in the header
@@ -151,7 +151,7 @@ const EditBusinessForm = () => {
       const { _id, ...dataToUpdate } = formData;
 
       const response = await axios.patch(
-        `https://crm-backend-cjyf.onrender.com/${businessId}`,
+        `http://localhost:5000/businesses/${businessId}`,
         dataToUpdate,
         {
           headers: {
