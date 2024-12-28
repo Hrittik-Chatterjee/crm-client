@@ -151,7 +151,7 @@ const EditBusinessForm = () => {
       const { _id, ...dataToUpdate } = formData;
 
       const response = await axios.patch(
-        `http://localhost:5000/businesses/${businessId}`,
+        `https://crm-backend-cjyf.onrender.com/businesses/${businessId}`,
         dataToUpdate,
         {
           headers: {
