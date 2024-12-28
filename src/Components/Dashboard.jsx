@@ -304,19 +304,53 @@ const Dashboard = () => {
                 <td className="px-4 py-2">
                   <button
                     onClick={() => openEditModal(content)}
-                    className="px-3 mr-2 bg-blue-500 text-white rounded-md"
+                    className="px-3 mr-2 bg-blue-500 text-white "
+                    style={{
+                      boxShadow: "none", // No initial shadow
+                      transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.boxShadow =
+                        "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                    }}
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => openViewModal(content)}
-                    className=" px-3  mr-2 bg-blue-500 text-white rounded-md"
+                    className="px-3 mr-2 bg-blue-500 text-white "
+                    style={{
+                      boxShadow: "none", // No initial shadow
+                      transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.boxShadow =
+                        "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                    }}
                   >
                     View
                   </button>
+
                   <button
                     onClick={() => handleDelete(content._id)}
-                    className="px-3  bg-blue-500 text-white rounded-md"
+                    className="px-3 mr-2 bg-blue-500 text-white "
+                    style={{
+                      boxShadow: "none", // No initial shadow
+                      transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.boxShadow =
+                        "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                    }}
                   >
                     Delete
                   </button>

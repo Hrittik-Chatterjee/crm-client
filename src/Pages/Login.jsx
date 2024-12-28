@@ -9,7 +9,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const { user, setUser } = useAuth(); // Access setUser from context
@@ -55,47 +55,70 @@ const Login = () => {
   console.log(user?.role);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-sm p-6 bg-white shadow-md rounded-md">
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-          LOGIN
-        </h2>
-
-        <div className="space-y-4">
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-l"></span>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full pl-4 pr-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-l"></span>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-4 pr-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className="flex w-full max-w-2xl bg-white shadow-md rounded-md overflow-hidden">
+        {/* Logo Section */}
+        <div className="hidden sm:flex items-center justify-center w-1/3 ">
+          <img
+            src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg" // Replace with your logo URL
+            alt="Logo"
+            className="h-72 w-80"
+          />
         </div>
 
-        <button
-          onClick={handleLogin}
-          className={`w-full py-2 mt-6 text-white bg-blue-500 rounded hover:bg-blue-600 ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "LOGIN"}
-        </button>
+        {/* Login Form Section */}
+        <div className="flex-1 p-6">
+          <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+            LOGIN
+          </h2>
 
-        {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
-        {success && <p className="mt-4 text-sm text-green-500">{success}</p>}
+          <div className="space-y-4">
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-l"></span>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full pl-4 pr-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-l"></span>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                className="w-full pl-4 pr-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 px-3 text-gray-500 focus:outline-none"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+          </div>
+
+          <button
+            onClick={handleLogin}
+            className={`w-full py-2 mt-6 text-white bg-blue-500 rounded hover:bg-blue-600 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "LOGIN"}
+          </button>
+
+          {error && (
+            <p className="mt-4 text-sm text-white bg-red-500 py-3 rounded-sm text-center uppercase">
+              {error}
+            </p>
+          )}
+          {success && <p className="mt-4 text-sm text-green-500">{success}</p>}
+        </div>
       </div>
     </div>
   );
