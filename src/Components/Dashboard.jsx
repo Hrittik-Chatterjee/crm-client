@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import axios from "axios";
 import "react-day-picker/dist/style.css";
+import { useAuth } from "../hooks/useAuth";
 
 const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [editFormData, setEditFormData] = useState({});
+
+  const { user } = useAuth();
 
   // Fetch businesses
   const getBusinesses = async () => {
@@ -48,20 +51,28 @@ const Dashboard = () => {
   }, []);
 
   // Filter businesses based on the search query
-  const filteredBusinesses = businesses.filter((business) =>
-    business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredBusinesses = businesses
+    .filter((business) =>
+      user.role === "admin" ? true : business.assignedTo === user.username
+    )
+    .filter((business) =>
+      business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   // Filter contents based on selected business and date
   const filteredContents = regularContents.filter((content) => {
+    if (user.role === 'admin') {
+      return true; // Show all contents for admin
+    }
     const isDateMatch =
       new Date(content.date).toLocaleDateString() ===
       selectedDate.toLocaleDateString();
     const isBusinessMatch =
       !selectedBusiness || content.name === selectedBusiness;
-    return isDateMatch && isBusinessMatch;
+    const isUserMatch = user.username === content.addedBy;
+    return isDateMatch && isBusinessMatch && isUserMatch;
   });
-
+  
   const toggleDatePicker = () => setShowDatePicker(!showDatePicker);
 
   // Add the updated status change functionality

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
+import { useAuth } from "../hooks/useAuth";
 
 const AddRegularContent = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -31,9 +32,14 @@ const AddRegularContent = () => {
     setSelected(new Date());
   }, []);
 
-  const filteredBusinesses = businesses.filter((business) =>
-    business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { user } = useAuth();
+  const filteredBusinesses = businesses
+    .filter((business) =>
+      user.role === "admin" ? true : business.assignedTo === user.username
+    )
+    .filter((business) =>
+      business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   // handle form data
   const handleSubmit = async (e) => {
@@ -57,6 +63,7 @@ const AddRegularContent = () => {
       posterAndTags, // Combined Poster Material and Tags
       vision: e.target.vision.value, // Capture vision input
       comments: e.target.comments.value,
+      addedBy: user?.username,
       status: false, // Initial status set to false
     };
 
@@ -66,6 +73,7 @@ const AddRegularContent = () => {
         formData
       );
       console.log("Data saved successfully:", response.data);
+      alert("Added successfully");
       // Optionally reset form or provide feedback
     } catch (error) {
       console.error("Error saving data:", error);

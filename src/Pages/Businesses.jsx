@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const BusinessDetails = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -24,9 +25,15 @@ const BusinessDetails = () => {
     getBusinesses();
   }, []);
 
-  const filteredBusinesses = businesses.filter((business) =>
-    business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { user } = useAuth();
+
+  const filteredBusinesses = businesses
+    .filter((business) =>
+      user.role === "admin" ? true : business.assignedTo === user.username
+    )
+    .filter((business) =>
+      business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
     <div className="flex h-screen">
@@ -105,17 +112,30 @@ const BusinessDetails = () => {
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(selectedBusiness.socialMediaLinks).map(
-                  ([platform, link]) => (
-                    <a
-                      key={platform}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-purple-600 hover:underline"
-                    >
-                      {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                    </a>
-                  )
+                  ([platform, link]) => {
+                    // Handle nested object cases (e.g., Facebook, WhatsApp)
+                    const url =
+                      typeof link === "object" && link !== null
+                        ? link.url
+                        : link;
+
+                    return url ? (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-purple-600 hover:underline"
+                      >
+                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                      </a>
+                    ) : (
+                      <span key={platform} className="text-gray-500">
+                        {platform.charAt(0).toUpperCase() + platform.slice(1)}:
+                        No link
+                      </span>
+                    );
+                  }
                 )}
               </div>
             </div>

@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 const Links = () => {
   const [businesses, setBusinesses] = useState([]);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [modalBusiness, setModalBusiness] = useState(null); // State to track the modal's business
 
   const getBusinesses = async () => {
     try {
@@ -21,10 +23,15 @@ const Links = () => {
     getBusinesses();
   }, []);
 
-  // Filtered businesses for the sidebar
-  const filteredBusinesses = businesses.filter((business) =>
-    business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { user } = useAuth();
+
+  const filteredBusinesses = businesses
+    .filter((business) =>
+      user.role === "admin" ? true : business.assignedTo === user.username
+    )
+    .filter((business) =>
+      business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   return (
     <div className="flex h-screen">
@@ -41,7 +48,7 @@ const Links = () => {
           {filteredBusinesses.map((business) => (
             <li
               key={business._id}
-              onClick={() => setSelectedBusiness(business)} // Set selected business
+              onClick={() => setSelectedBusiness(business)}
               className={`cursor-pointer px-3 py-2 rounded-md ${
                 selectedBusiness?._id === business._id
                   ? "bg-purple-200"
@@ -71,7 +78,7 @@ const Links = () => {
             </tr>
           </thead>
           <tbody>
-            {(selectedBusiness ? [selectedBusiness] : businesses).map(
+            {(selectedBusiness ? [selectedBusiness] : filteredBusinesses).map(
               (business) => (
                 <tr key={business._id}>
                   <th>{business.businessName}</th>
@@ -106,86 +113,10 @@ const Links = () => {
                   <td>
                     <button
                       className="btn btn-sm btn-primary"
-                      onClick={() =>
-                        document.getElementById("my_modal_5").showModal()
-                      }
+                      onClick={() => setModalBusiness(business)}
                     >
                       View
                     </button>
-                    <dialog
-                      id="my_modal_5"
-                      className="modal modal-bottom sm:modal-middle"
-                    >
-                      <div className="modal-box">
-                        <table className="table-auto w-full border border-gray-300">
-                          <thead>
-                            <tr>
-                              <th className="border px-4 py-2">Platform</th>
-                              <th className="border px-4 py-2">Username</th>
-                              <th className="border px-4 py-2">Password</th>
-                              <th className="border px-4 py-2">Link</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Object.entries(business?.socialMediaLinks || {})
-                              .filter(([platform]) =>
-                                [
-                                  "facebook",
-                                  "instagram",
-                                  "whatsApp",
-                                  "youtube",
-                                ].includes(platform)
-                              )
-                              .map(([platform, details]) => (
-                                <tr key={platform}>
-                                  <td className="border px-4 py-2 capitalize">
-                                    {platform}
-                                  </td>
-                                  <td className="border px-4 py-2">
-                                    {details.username || "N/A"}
-                                  </td>
-                                  <td className="border px-4 py-2">
-                                    {details.password || "N/A"}
-                                  </td>
-                                  <td className="border px-4 py-2">
-                                    <a
-                                      href={details.url || "#"}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-blue-500 hover:underline"
-                                    >
-                                      Visit
-                                    </a>
-                                  </td>
-                                </tr>
-                              ))}
-                          </tbody>
-                        </table>
-                        <div className="mt-4 flex justify-end">
-                          <a
-                            href={business?.socialMediaLinks?.tripAdvisor}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-sm btn-secondary mr-2"
-                          >
-                            TripAdvisor
-                          </a>
-                          <a
-                            href={business?.socialMediaLinks?.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-sm btn-secondary"
-                          >
-                            Website
-                          </a>
-                        </div>
-                        <div className="modal-action">
-                          <form method="dialog">
-                            <button className="btn">Close</button>
-                          </form>
-                        </div>
-                      </div>
-                    </dialog>
                   </td>
                 </tr>
               )
@@ -200,6 +131,85 @@ const Links = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Modal */}
+      {modalBusiness && (
+        <dialog
+          id="my_modal_5"
+          className="modal modal-bottom sm:modal-middle"
+          open
+        >
+          <div className="modal-box">
+            <table className="table-auto w-full border border-gray-300">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Platform</th>
+                  <th className="border px-4 py-2">Username</th>
+                  <th className="border px-4 py-2">Password</th>
+                  <th className="border px-4 py-2">Link</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(modalBusiness?.socialMediaLinks || {})
+                  .filter(([platform]) =>
+                    ["facebook", "instagram", "whatsApp", "youtube"].includes(
+                      platform
+                    )
+                  )
+                  .map(([platform, details]) => (
+                    <tr key={platform}>
+                      <td className="border px-4 py-2 capitalize">
+                        {platform}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {details.username || "N/A"}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {details.password || "N/A"}
+                      </td>
+                      <td className="border px-4 py-2">
+                        <a
+                          href={details.url || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          Visit
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <div className="mt-4 flex justify-end">
+              <a
+                href={modalBusiness?.socialMediaLinks?.tripAdvisor}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm btn-secondary mr-2"
+              >
+                TripAdvisor
+              </a>
+              <a
+                href={modalBusiness?.socialMediaLinks?.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-sm btn-secondary"
+              >
+                Website
+              </a>
+            </div>
+            <div className="modal-action">
+              <button
+                className="btn"
+                onClick={() => setModalBusiness(null)} // Close modal
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
     </div>
   );
 };

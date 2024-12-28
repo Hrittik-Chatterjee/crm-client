@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
+import UserProfile from "../../Pages/UserProfile";
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <div>Loading...</div>; // Display a placeholder while loading
+  }
+  console.log(user?.username);
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -21,51 +29,55 @@ const Navbar = () => {
               />
             </svg>
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <Link to="/"> All Content</Link>
-            </li>
-            <li>
-              <Link to="/addregularcontent"> Write Content</Link>
-            </li>
-            <li>
-              <Link to="/links"> Links</Link>
-            </li>
-            <li>
-              <Link to="/businesses"> Business</Link>
-            </li>
-            <li>
-              <Link to="/tasks"> Tasks</Link>
-            </li>
-          </ul>
+          {user && (
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
+              <li>
+                <Link to="/">All Content</Link>
+              </li>
+              <li>
+                <Link to="/addregularcontent">Write Content</Link>
+              </li>
+              <li>
+                <Link to="/links">Links</Link>
+              </li>
+              <li>
+                <Link to="/businesses">Business</Link>
+              </li>
+              <li>
+                <Link to="/tasks">Tasks</Link>
+              </li>
+            </ul>
+          )}
         </div>
         <Link className="btn btn-ghost text-xl">daisyUI</Link>
       </div>
+
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <Link to="/">All Content</Link>
-          </li>
-          <li>
-            <Link to="/addregularcontent"> Write Content</Link>
-          </li>
-          <li>
-            <Link to="/links">Links</Link>
-          </li>
-          <li>
-            <Link to="/businesses"> Business</Link>
-          </li>
-          <li>
-            <Link to="/tasks"> Tasks</Link>
-          </li>
-        </ul>
+        {user && (
+          <ul className="menu menu-horizontal px-1">
+            <li>
+              <Link to="/">All Content</Link>
+            </li>
+            <li>
+              <Link to="/addregularcontent">Write Content</Link>
+            </li>
+            <li>
+              <Link to="/links">Links</Link>
+            </li>
+            <li>
+              <Link to="/businesses">Business</Link>
+            </li>
+            <li>
+              <Link to="/tasks">Tasks</Link>
+            </li>
+          </ul>
+        )}
       </div>
-      <div className="navbar-end">
-        <Link className="btn">Button</Link>
-      </div>
+
+      <div className="navbar-end">{user && <UserProfile />}</div>
     </div>
   );
 };
