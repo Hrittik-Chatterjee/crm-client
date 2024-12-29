@@ -81,11 +81,11 @@ const AddRegularContent = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen-navbar">
       {/* Sidebar */}
-      <div className="w-1/4 bg-gray-100 p-4 overflow-y-auto">
-        {/* DayPicker */}
-        <div className="w-full max-w-xs relative">
+      {/* <div className="w-1/4 bg-gray-100 p-4 overflow-y-auto"> */}
+      {/* DayPicker */}
+      {/* <div className="w-full max-w-xs relative">
           <button
             className="select select-primary w-full max-w-xs bg-slate-300"
             onClick={toggleDatePicker}
@@ -109,20 +109,20 @@ const AddRegularContent = () => {
               />
             </div>
           )}
-        </div>
-        {/* Search bar */}
-        <input
+        </div> */}
+      {/* Search bar */}
+      {/* <input
           type="text"
           placeholder="Search"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Update search query state
           className="mt-2 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-purple-500"
-        />
-        <ul className="mt-4 space-y-2">
+        /> */}
+      {/* <ul className="mt-4 space-y-2">
           {filteredBusinesses.map((business) => (
             <li
               key={business.businessName}
-              onClick={() => setSelectedBusiness(business)} // Update selected business
+              onClick={() => setSelectedBusiness(business)} 
               className={`cursor-pointer px-3 py-2 rounded-md ${
                 selectedBusiness?.businessName === business.businessName
                   ? "bg-purple-100"
@@ -135,7 +135,66 @@ const AddRegularContent = () => {
           {filteredBusinesses.length === 0 && (
             <li className="px-3 py-2 text-gray-500">No results found</li>
           )}
-        </ul>
+        </ul> */}
+      {/* </div> */}
+
+      <div className="w-1/4 bg-white shadow-md   h-full  ">
+        <div className="p-4">
+          {/* Date Picker */}
+          <button
+            className="select select-primary w-full max-w-xs bg-slate-100 flex items-center justify-center"
+            onClick={toggleDatePicker}
+          >
+            <p className="text-center">
+              {selected ? selected.toLocaleDateString() : "Select a Date"}
+            </p>
+          </button>
+
+          {showDatePicker && (
+            <div className="absolute mt-2 border rounded p-2 shadow bg-gray-800 text-white z-10">
+              <DayPicker
+                mode="single"
+                selected={selected}
+                onSelect={(date) => {
+                  setSelected(date);
+                  setShowDatePicker(false);
+                }}
+              />
+            </div>
+          )}
+
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="mt-2 w-full px-3 py-2 border rounded-md"
+          />
+
+          {/* Business List */}
+          <ul
+            className="mt-4 space-y-2 overflow-y-auto sidebar"
+            style={{ maxHeight: "calc(100vh - 120px)" }} // Adjust max height dynamically
+          >
+            {filteredBusinesses.map((business) => (
+              <li
+                key={business.businessName}
+                className={`cursor-pointer px-3 py-2 rounded-md ${
+                  selectedBusiness?.businessName === business.businessName
+                    ? "bg-purple-200"
+                    : "hover:bg-purple-100"
+                }`}
+                onClick={() => setSelectedBusiness(business)}
+              >
+                {business.businessName}
+              </li>
+            ))}
+            {filteredBusinesses.length === 0 && (
+              <li className="px-3 py-2 text-gray-500">No results found</li>
+            )}
+          </ul>
+        </div>
       </div>
 
       {/* Regular content */}

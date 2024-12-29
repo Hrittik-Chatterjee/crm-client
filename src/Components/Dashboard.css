@@ -26,5 +26,5 @@
 /* Firefox-specific styles */
 .sidebar {
   scrollbar-width: thin; /* Makes scrollbar smaller */
-  scrollbar-color: #3719bb #f4f4f5; /* Thumb color (first), track color (second) */
+  scrollbar-color: #3b82f6 #f4f4f5; /* Thumb color (first), track color (second) */
 }

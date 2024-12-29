@@ -2,13 +2,18 @@
 import { Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../Providers/AuthProvider";
+import Loading from "../Components/Loading";
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) {
     // Display a loading spinner or a placeholder while user data is being fetched
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
 
   if (user?.role !== "admin") {

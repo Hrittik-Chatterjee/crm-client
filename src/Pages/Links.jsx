@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import "../Components/Dashboard.css";
 
 const Links = () => {
   const [businesses, setBusinesses] = useState([]);
@@ -36,7 +37,7 @@ const Links = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="w-1/4 bg-gray-100 p-4 overflow-y-auto">
+      {/* <div className="w-1/4 bg-gray-100 p-4 overflow-y-auto">
         <input
           type="text"
           placeholder="Search"
@@ -62,8 +63,42 @@ const Links = () => {
             <li className="px-3 py-2 text-gray-500">No results found</li>
           )}
         </ul>
-      </div>
+      </div> */}
+      <div className="w-1/4 bg-white shadow-md   h-full  ">
+        <div className="p-4">
+          {/* Search Input */}
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="mt-2 w-full px-3 py-2 border rounded-md"
+          />
 
+          {/* Business List */}
+          <ul
+            className="mt-4 space-y-2 overflow-y-auto sidebar"
+            style={{ maxHeight: "calc(100vh - 120px)" }} // Adjust max height dynamically
+          >
+            {filteredBusinesses.map((business) => (
+              <li
+                key={business.businessName}
+                className={`cursor-pointer px-3 py-2 rounded-md ${
+                  selectedBusiness === business.businessName
+                    ? "bg-purple-200"
+                    : "hover:bg-purple-100"
+                }`}
+                onClick={() => setSelectedBusiness(business)}
+              >
+                {business.businessName}
+              </li>
+            ))}
+            {filteredBusinesses.length === 0 && (
+              <li className="px-3 py-2 text-gray-500">No results found</li>
+            )}
+          </ul>
+        </div>
+      </div>
       {/* Table Content */}
       <div className="w-3/4 p-6">
         <table className="table">
@@ -77,58 +112,73 @@ const Links = () => {
               <th>Details</th>
             </tr>
           </thead>
-          <tbody>
-            {(selectedBusiness ? [selectedBusiness] : filteredBusinesses).map(
-              (business) => (
-                <tr key={business._id}>
-                  <th>{business.businessName}</th>
-                  <td>{business.package}</td>
-                  <td>
-                    <a
-                      href={business?.socialMediaLinks?.facebook?.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Facebook
-                    </a>
-                  </td>
-                  <td>
-                    <a
-                      href={business?.socialMediaLinks?.instagram?.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Instagram
-                    </a>
-                  </td>
-                  <td>
-                    <a
-                      href={business?.socialMediaLinks?.youtube?.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      YouTube
-                    </a>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => setModalBusiness(business)}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
-            {!selectedBusiness && businesses.length === 0 && (
-              <tr>
-                <td colSpan="6" className="text-center text-gray-500">
-                  No businesses available
-                </td>
-              </tr>
-            )}
-          </tbody>
+          <tr>
+            <td colSpan="6" className="w-full">
+              <div
+                style={{
+                  maxHeight: "calc(100vh - 120px)", // Adjust as needed
+                  overflowY: "auto", // Enable vertical scrolling
+                }}
+                className="sidebar "
+              >
+                <table className="w-full ">
+                  <tbody>
+                    {(selectedBusiness
+                      ? [selectedBusiness]
+                      : filteredBusinesses
+                    ).map((business) => (
+                      <tr key={business._id}>
+                        <td>{business.businessName}</td>
+                        <td>{business.package}</td>
+                        <td>
+                          <a
+                            href={business?.socialMediaLinks?.facebook?.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Facebook
+                          </a>
+                        </td>
+                        <td>
+                          <a
+                            href={business?.socialMediaLinks?.instagram?.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Instagram
+                          </a>
+                        </td>
+                        <td>
+                          <a
+                            href={business?.socialMediaLinks?.youtube?.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            YouTube
+                          </a>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-sm btn-primary -mr-6"
+                            onClick={() => setModalBusiness(business)}
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {!selectedBusiness && businesses.length === 0 && (
+                      <tr>
+                        <td colSpan="6" className="text-center text-gray-500">
+                          No businesses available
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
         </table>
       </div>
 

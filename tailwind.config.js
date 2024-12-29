@@ -10,12 +10,14 @@ export default {
       fontFamily: {
         title: ["Poppins", "sans-serif"],
       },
+      height: {
+        "screen-navbar": "calc(100vh - 64px)", // Replace 64px with your navbar height
+      },
     },
   },
   plugins: [daisyui, scrollbar],
-  
 
   daisyui: {
-    themes: ["autumn", "dark", "cupcake"],
+    themes: ["light"],
   },
 };

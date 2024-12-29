@@ -3,13 +3,10 @@ import UserProfile from "../../Pages/UserProfile";
 import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
-  const { user, loading } = useAuth();
-  if (loading) {
-    return <div>Loading...</div>; // Display a placeholder while loading
-  }
+  const { user } = useAuth();
 
   return (
-    <div className="navbar bg-base-10 font-title">
+    <div className="navbar bg-base-10 font-title shadow-lg  mb-2">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

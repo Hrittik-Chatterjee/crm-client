@@ -60,13 +60,10 @@ const Dashboard = () => {
       business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-  // Filter contents based on selected business and date
   const filteredContents = regularContents.filter((content) => {
-    const contentDate = new Date(content.date); // Parse content.date into a Date object
     const isDateMatch =
-      contentDate.toISOString().split("T")[0] ===
-      selectedDate.toISOString().split("T")[0]; // Compare YYYY-MM-DD
-
+      new Date(content.date).toLocaleDateString() ===
+      selectedDate.toLocaleDateString();
     const isBusinessMatch =
       !selectedBusiness || content.name === selectedBusiness;
     const isUserMatch =
@@ -216,7 +213,7 @@ const Dashboard = () => {
           {/* Business List */}
           <ul
             className="mt-4 space-y-2 overflow-y-auto sidebar"
-            style={{ maxHeight: "calc(100vh - 230px)" }} // Adjust max height dynamically
+            style={{ maxHeight: "calc(100vh - 200px)" }} // Adjust max height dynamically
           >
             {filteredBusinesses.map((business) => (
               <li
@@ -245,125 +242,173 @@ const Dashboard = () => {
         </h2>
         <table className="w-full bg-white shadow-md rounded-md overflow-hidden">
           <thead>
-            <tr className="bg-blue-100 text-center ">
-              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
-                Business Name
-              </th>
-              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
-                Date
-              </th>
-              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
-                Status
-              </th>
-              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
-                Change Status
-              </th>
-              <th className="px-4 py-2" style={{ fontWeight: "normal" }}>
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredContents.map((content) => (
-              <tr
-                key={content._id}
-                className="border-b hover:bg-gray-50 text-center"
-              >
-                <td className="px-4 py-2">{content.name}</td>
-                <td className="px-4 py-2">
-                  {new Date(content.date).toLocaleDateString()}
-                </td>
-                <td
-                  className={`px-4 py-2 ${
-                    content.status ? "text-green-500" : "text-red-500"
-                  }`}
+            <div>
+              <tr className="bg-blue-100 text-center">
+                <th
+                  className="py-2 pl-12 pr-24"
+                  style={{ fontWeight: "normal" }}
                 >
-                  {content.status ? "Done" : "Processing"}
-                </td>
-                <td className="ml-14  py-2 flex items-center space-x-2">
-                  {/* Tick Button */}
-                  <button
-                    className="px-3 bg-blue-500 text-white rounded-md"
-                    onClick={() => handleTickClick(content._id, content.status)}
-                    disabled={content.status} // Disable if already 'Done'
-                  >
-                    ✓
-                  </button>
-
-                  {/* Cross Button */}
-                  <button
-                    className="px-3 bg-red-600 text-white rounded-md"
-                    onClick={() =>
-                      handleCrossClick(content._id, content.status)
-                    }
-                    disabled={!content.status} // Disable if already 'Processing'
-                  >
-                    ✕
-                  </button>
-                </td>
-                <td className="px-4 py-2">
-                  <button
-                    onClick={() => openEditModal(content)}
-                    className="px-3 mr-2 bg-blue-500 text-white "
-                    style={{
-                      boxShadow: "none", // No initial shadow
-                      transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.boxShadow =
-                        "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => openViewModal(content)}
-                    className="px-3 mr-2 bg-blue-500 text-white "
-                    style={{
-                      boxShadow: "none", // No initial shadow
-                      transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.boxShadow =
-                        "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
-                    }}
-                  >
-                    View
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(content._id)}
-                    className="px-3 mr-2 bg-blue-500 text-white "
-                    style={{
-                      boxShadow: "none", // No initial shadow
-                      transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.boxShadow =
-                        "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
+                  {" "}
+                  {/* Ensure padding and alignment */}
+                  Business Name
+                </th>
+                <th className="py-2 pr-20" style={{ fontWeight: "normal" }}>
+                  Date
+                </th>
+                <th className="py-2 pr-12" style={{ fontWeight: "normal" }}>
+                  Status
+                </th>
+                <th className="py-2 pr-28" style={{ fontWeight: "normal" }}>
+                  Change Status
+                </th>
+                <th className="py-2 pr-40" style={{ fontWeight: "normal" }}>
+                  Action
+                </th>
               </tr>
-            ))}
-            {filteredContents.length === 0 && (
-              <tr>
-                <td colSpan="5" className="text-center px-4 py-2 text-gray-500">
-                  No content available for this selection
-                </td>
-              </tr>
-            )}
+            </div>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td colSpan="5">
+                <div
+                  style={{
+                    maxHeight: "calc(100vh - 200px)", // Adjust as needed
+                    overflowY: "auto", // Enable vertical scrolling
+                  }}
+                  className="sidebar"
+                >
+                  <table className="w-full">
+                    <tbody>
+                      {filteredContents.map((content) => (
+                        <tr
+                          key={content._id}
+                          className="border-b hover:bg-gray-50 text-center"
+                        >
+                          <td className="px-4 py-2">{content.name}</td>
+                          <td className="px-4 py-2">
+                            {new Date(content.date).toLocaleDateString()}
+                          </td>
+                          <td
+                            className={`px-4 py-2 ${
+                              content.status ? "text-green-500" : "text-red-500"
+                            }`}
+                          >
+                            {content.status ? "Done" : "Processing"}
+                          </td>
+                          <td className="py-2 flex justify-center items-center space-x-2">
+                            {/* Buttons */}
+                            <button
+                              className="px-3 bg-blue-500 text-white"
+                              onClick={() =>
+                                handleTickClick(content._id, content.status)
+                              }
+                              disabled={content.status}
+                              style={{
+                                boxShadow: "none", // No initial shadow
+                                transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.boxShadow =
+                                  "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                              }}
+                            >
+                              ✓
+                            </button>
+                            <button
+                              className="px-3 bg-red-600 text-white"
+                              onClick={() =>
+                                handleCrossClick(content._id, content.status)
+                              }
+                              disabled={!content.status}
+                              style={{
+                                boxShadow: "none", // No initial shadow
+                                transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.boxShadow =
+                                  "0 6px 15px rgba(255, 0, 0, 0.8)"; // Deeper blue shadow on hover
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </td>
+                          <td className="px-4 py-2">
+                            <button
+                              onClick={() => openEditModal(content)}
+                              className="px-3 mr-2 bg-blue-500 text-white"
+                              style={{
+                                boxShadow: "none", // No initial shadow
+                                transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.boxShadow =
+                                  "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => openViewModal(content)}
+                              className="px-3 mr-2 bg-blue-500 text-white"
+                              style={{
+                                boxShadow: "none", // No initial shadow
+                                transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.boxShadow =
+                                  "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                              }}
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => handleDelete(content._id)}
+                              className="px-3 mr-2 bg-blue-500 text-white"
+                              style={{
+                                boxShadow: "none", // No initial shadow
+                                transition: "box-shadow 0.3s ease-in-out", // Smooth transition for the shadow effect
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.boxShadow =
+                                  "0 6px 15px rgba(29, 78, 216, 0.8)"; // Deeper blue shadow on hover
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.boxShadow = "none"; // Remove the shadow when not hovered
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                      {filteredContents.length === 0 && (
+                        <tr>
+                          <td
+                            colSpan="5"
+                            className="text-center px-4 py-2 text-gray-500"
+                          >
+                            No content available for this selection
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
