@@ -4,7 +4,7 @@ import axios from "axios";
 const CreateUser = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("normal user");
+  const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -76,7 +76,8 @@ const CreateUser = () => {
               className="w-full pl-4 pr-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="admin">Admin</option>
-              <option value="normal user">Normal User</option>
+              <option value="content writer">Content Writer</option>
+              <option value="designer">Designer</option>
             </select>
           </div>
         </div>

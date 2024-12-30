@@ -52,9 +52,19 @@ const Dashboard = () => {
   }, []);
 
   // Filter businesses based on the search query
+  // const filteredBusinesses = businesses
+  //   .filter((business) =>
+  //     user.role === "admin" ? true : business.assignedTo === user.username
+  //   )
+  //   .filter((business) =>
+  //     business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
   const filteredBusinesses = businesses
-    .filter((business) =>
-      user.role === "admin" ? true : business.assignedTo === user.username
+    .filter(
+      (business) =>
+        user.role === "admin" ||
+        business.assignedCW === user.username ||
+        business.assignedCD === user.username
     )
     .filter((business) =>
       business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -245,23 +255,54 @@ const Dashboard = () => {
             <div>
               <tr className="bg-blue-100 text-center">
                 <th
-                  className="py-2 pl-12 pr-24"
-                  style={{ fontWeight: "normal" }}
+                  className="py-2"
+                  style={{
+                    fontWeight: "normal",
+                    fontSize: "clamp(0.875rem, 1vw, 1.125rem)", // Responsive font size
+                    paddingLeft: "3rem",
+                    paddingRight: "6rem",
+                  }}
                 >
-                  {" "}
-                  {/* Ensure padding and alignment */}
                   Business Name
                 </th>
-                <th className="py-2 pr-20" style={{ fontWeight: "normal" }}>
+                <th
+                  className="py-2"
+                  style={{
+                    fontWeight: "normal",
+                    fontSize: "clamp(0.875rem, 1vw, 1.125rem)",
+                    paddingRight: "8rem",
+                  }}
+                >
                   Date
                 </th>
-                <th className="py-2 pr-12" style={{ fontWeight: "normal" }}>
+                <th
+                  className="py-2"
+                  style={{
+                    fontWeight: "normal",
+                    fontSize: "clamp(0.875rem, 1vw, 1.125rem)",
+                    paddingRight: "4rem",
+                  }}
+                >
                   Status
                 </th>
-                <th className="py-2 pr-28" style={{ fontWeight: "normal" }}>
+                <th
+                  className="py-2"
+                  style={{
+                    fontWeight: "normal",
+                    fontSize: "clamp(0.875rem, 1vw, 1.125rem)",
+                    paddingRight: "8rem",
+                  }}
+                >
                   Change Status
                 </th>
-                <th className="py-2 pr-40" style={{ fontWeight: "normal" }}>
+                <th
+                  className="py-2"
+                  style={{
+                    fontWeight: "normal",
+                    fontSize: "clamp(0.875rem, 1vw, 1.125rem)",
+                    paddingRight: "10rem",
+                  }}
+                >
                   Action
                 </th>
               </tr>
@@ -419,43 +460,91 @@ const Dashboard = () => {
           <div
             className="bg-white rounded-lg shadow-lg p-6 relative"
             style={{
-              width: "600px",
-              maxHeight: "90vh",
+              width: "70vw", // Adjusted width for better fit
+              height: "80vh", // Height adjusted to match the provided design
               overflowY: "auto",
             }}
           >
-            <h3 className="text-2xl font-bold mb-4">{modalContent.name}</h3>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(modalContent.date).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Post Material and Tags:</strong>{" "}
-              {modalContent.posterAndTags}
-            </p>
-            <p>
-              <strong>Poster Material:</strong> {modalContent.posterMaterial}
-            </p>
-            <p>
-              <strong>Vision:</strong> {modalContent.vision}
-            </p>
+            <h2 className="text-xl font-semibold mb-4 border-b pb-2">
+              Content Details
+            </h2>
+            <div className="grid grid-cols-3 gap-4">
+              {/* Left Sidebar */}
+              <div className="flex flex-col h-full">
+                <div className="w-full text-left px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600">
+                  Business Name
+                </div>
+                <div className="w-full text-left px-4 py-2 mt-5 bg-gray-200 text-gray-700 font-medium rounded">
+                  Post Materials & Tags
+                </div>
+                <div className="w-full text-left px-4 py-2 mt-24 bg-gray-200 text-gray-700 font-medium rounded">
+                  Poster Material
+                </div>
+                <div className="w-full text-left px-4 py-2 mt-24 bg-gray-200 text-gray-700 font-medium rounded">
+                  Vision
+                </div>
+                <div className="w-full text-left px-4 py-2 mt-24 bg-gray-200 text-gray-700 font-medium rounded">
+                  Comment
+                </div>
+              </div>
 
-            <p>
-              <strong>Comments:</strong> {modalContent.comments}
-            </p>
-            <p
-              className={`mt-2 font-bold ${
-                modalContent.status ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              Status: {modalContent.status ? "Done" : "Processing"}
-            </p>
-            <div className="flex justify-end mt-6">
+              {/* Right Content Area */}
+              <div className="col-span-2 space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    className="w-2/3 border rounded px-4 py-2 text-gray-700"
+                    value={modalContent.name || ""}
+                    readOnly
+                  />
+                  <input
+                    type="text"
+                    className="w-1/3 rounded border px-4 py-2 text-gray-700"
+                    readOnly
+                    value={modalContent?.date || "No Date"}
+                  />
+                </div>
+                <div>
+                  <textarea
+                    className="w-full border rounded px-4 py-2 text-gray-700"
+                    rows={4}
+                    value={modalContent.postAndTags || ""}
+                    readOnly
+                  />
+                </div>
+                <div>
+                  <textarea
+                    className="w-full border rounded px-4 py-2 text-gray-700"
+                    rows={4}
+                    value={modalContent.posterMaterial || ""}
+                    readOnly
+                  />
+                </div>
+                <div>
+                  <textarea
+                    className="w-full border rounded px-4 py-2 text-gray-700"
+                    rows={4}
+                    value={modalContent.vision || ""}
+                    readOnly
+                  />
+                </div>
+                <div>
+                  <textarea
+                    className="w-full border rounded px-4 py-2 text-gray-700"
+                    rows={4}
+                    value={modalContent.comments || ""}
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end mt-4">
               <button
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600"
                 onClick={closeViewModal}
               >
-                Close
+                Back
               </button>
             </div>
           </div>
@@ -491,7 +580,7 @@ const Dashboard = () => {
                   Post Material
                 </label>
                 <textarea
-                  value={editFormData.postMaterial || ""}
+                  value={editFormData.postAndTags || ""}
                   onChange={(e) =>
                     handleEditChange("postMaterial", e.target.value)
                   }

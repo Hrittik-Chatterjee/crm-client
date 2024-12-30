@@ -67,7 +67,8 @@ const EditUser = ({ user, onClose, onSave }) => {
           >
             <option value="">Select a role</option>
             <option value="admin">Admin</option>
-            <option value="normal user">Normal User</option>
+            <option value="content writer">Conter Writer</option>
+            <option value="designer">Designer</option>
           </select>
         </div>
         <div className="flex justify-end space-x-4">

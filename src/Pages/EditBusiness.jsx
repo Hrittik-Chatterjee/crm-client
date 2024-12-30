@@ -22,7 +22,9 @@ const EditBusinessForm = () => {
       googleBusiness: "",
     },
     tags: "",
-    assignedTo: "",
+    // assignedTo: "",
+    assignedCW: "",
+    assignedCD: "",
   });
 
   const [users, setUsers] = useState([]); // State for user list
@@ -170,6 +172,11 @@ const EditBusinessForm = () => {
     }
   };
 
+  const filteredDesigner = users.filter((user) => user.role === "designer");
+  const filteredContentWriter = users.filter(
+    (user) => user.role === "content writer"
+  );
+
   return (
     <div className="flex">
       {/* Sidebar with Business List */}
@@ -261,6 +268,26 @@ const EditBusinessForm = () => {
                 className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Tags
+              </label>
+              <textarea
+                name="tags"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={formData?.tags || ""}
+              ></textarea>
+            </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Note
+              </label>
+              <textarea
+                name="note"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={formData?.note || ""}
+              ></textarea>
             </div>
 
             {/* Entry Date */}
@@ -414,20 +441,39 @@ const EditBusinessForm = () => {
             </div>
           </div>
 
-          {/* Assigned To */}
+          {/* Assigned To  CW*/}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Assigned To:
+              Assigned Content Writer:
             </label>
             <select
-              name="assignedTo"
-              value={formData.assignedTo}
+              name="assignedCW"
+              value={formData.assignedCW}
               onChange={handleChange}
               className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
               <option value="">Select a user</option>
-              {users.map((user) => (
+              {filteredContentWriter.map((user) => (
+                <option key={user._id} value={user.username}>
+                  {user.username}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Assigned Content Designer:
+            </label>
+            <select
+              name="assignedCD"
+              value={formData.assignedCD}
+              onChange={handleChange}
+              className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Select a user</option>
+              {filteredDesigner.map((user) => (
                 <option key={user._id} value={user.username}>
                   {user.username}
                 </option>

@@ -33,9 +33,19 @@ const AddRegularContent = () => {
   }, []);
 
   const { user } = useAuth();
+  // const filteredBusinesses = businesses
+  //   .filter((business) =>
+  //     user.role === "admin" ? true : business.assignedTo === user.username
+  //   )
+  //   .filter((business) =>
+  //     business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
   const filteredBusinesses = businesses
-    .filter((business) =>
-      user.role === "admin" ? true : business.assignedTo === user.username
+    .filter(
+      (business) =>
+        user.role === "admin" ||
+        business.assignedCW === user.username ||
+        business.assignedCD === user.username
     )
     .filter((business) =>
       business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -46,9 +56,9 @@ const AddRegularContent = () => {
     e.preventDefault(); // Prevent default form submission
 
     // Combine Poster Material and Tags
-    const posterMaterial = e.target.posterMaterial.value;
+    const postMaterial = e.target.postMaterial.value;
     const tags = e.target.tags.value;
-    const posterAndTags = `${posterMaterial} ${tags}`.trim();
+    const postAndTags = `${postMaterial}\n\n${tags}`.trim();
 
     // Construct the payload
     const formData = {
@@ -60,9 +70,10 @@ const AddRegularContent = () => {
             year: "numeric",
           })
         : "", // Format date as YYYY-MM-DD
-      posterAndTags, // Combined Poster Material and Tags
+      postAndTags, // Combined Poster Material and Tags
       vision: e.target.vision.value, // Capture vision input
       comments: e.target.comments.value,
+      posterMaterial: e.target.posterMaterial.value,
       addedBy: user?.username,
       status: false, // Initial status set to false
     };
@@ -73,6 +84,7 @@ const AddRegularContent = () => {
         formData
       );
       console.log("Data saved successfully:", response.data);
+      console.log(formData);
       alert("Added successfully");
       // Optionally reset form or provide feedback
     } catch (error) {
@@ -204,7 +216,7 @@ const AddRegularContent = () => {
             className="w-full max-w-lg bg-white shadow-md rounded-lg p-6"
             onSubmit={handleSubmit}
           >
-            <h2 className="text-xl font-bold mb-4">Add Special Content</h2>
+            <h2 className="text-xl font-bold mb-4">Write Content</h2>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -234,10 +246,10 @@ const AddRegularContent = () => {
 
             <div className="mt-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Poster Material
+                Post Material
               </label>
               <textarea
-                name="posterMaterial"
+                name="postMaterial"
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 rows="3"
               ></textarea>
@@ -252,6 +264,16 @@ const AddRegularContent = () => {
                 className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 rows="3"
                 value={selectedBusiness?.tags || ""}
+              ></textarea>
+            </div>
+            <div className="mt-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Poster Material
+              </label>
+              <textarea
+                name="posterMaterial"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                rows="3"
               ></textarea>
             </div>
 

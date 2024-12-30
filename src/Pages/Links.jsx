@@ -26,9 +26,19 @@ const Links = () => {
 
   const { user } = useAuth();
 
+  // const filteredBusinesses = businesses
+  //   .filter((business) =>
+  //     user.role === "admin" ? true : business.assignedTo === user.username
+  //   )
+  //   .filter((business) =>
+  //     business.businessName.toLowerCase().includes(searchQuery.toLowerCase())
+  //   );
   const filteredBusinesses = businesses
-    .filter((business) =>
-      user.role === "admin" ? true : business.assignedTo === user.username
+    .filter(
+      (business) =>
+        user.role === "admin" ||
+        business.assignedCW === user.username ||
+        business.assignedCD === user.username
     )
     .filter((business) =>
       business.businessName.toLowerCase().includes(searchQuery.toLowerCase())

@@ -23,7 +23,8 @@ const AddBusiness = () => {
       googleBusiness: "",
     },
     tags: "",
-    assignedTo: "", // New field
+    assignedCW: "",
+    assignedCD: "",
   });
 
   const [users, setUsers] = useState([]); // State for user list
@@ -60,6 +61,11 @@ const AddBusiness = () => {
 
     fetchUsers();
   }, []);
+
+  const filteredDesigner = users.filter((user) => user.role === "designer");
+  const filteredContentWriter = users.filter(
+    (user) => user.role === "content writer"
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -340,17 +346,36 @@ const AddBusiness = () => {
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
-          Assigned To:
+          Assign Content Writer:
         </label>
         <select
-          name="assignedTo"
-          value={formData.assignedTo}
+          name="assignedCW"
+          value={formData.assignedCW}
           onChange={handleChange}
           className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         >
           <option value="">Select a user</option>
-          {users.map((user) => (
+          {filteredContentWriter.map((user) => (
+            <option key={user._id} value={user.username}>
+              {user.username}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Assign Designer:
+        </label>
+        <select
+          name="assignedCD"
+          value={formData.assignedCD}
+          onChange={handleChange}
+          className="w-full mt-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Select a user</option>
+          {filteredDesigner.map((user) => (
             <option key={user._id} value={user.username}>
               {user.username}
             </option>
